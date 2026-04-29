@@ -1,0 +1,54 @@
+# ==============================================================================
+# LLM Factory Configuration
+# ==============================================================================
+[llm_factory]
+# llm_type: api | vllm_api | vllm_local | local | vllm
+llm_type = "local"
+use_api = false
+use_vllm = false
+use_local = true
+vllm_use_api = false
+
+# Unified inference params (merged into backend kwargs)
+[llm_factory.infer]
+temperature = 0.0
+top_p = 1.0
+max_tokens = 1024
+stop = []
+seed = 42
+timeout_sec = 180
+
+# Optional closed-source API config
+[llm_factory.api_kwargs]
+model = "${OPENAI_MODEL}"
+api_key = "${OPENAI_API_KEY}"
+base_url = "${OPENAI_BASE_URL}"
+
+# vLLM config (API or local based on llm_type / vllm_use_api)
+[llm_factory.vllm_kwargs]
+# for vllm_api
+api_key = "${VLLM_API_KEY}"
+base_url = "${VLLM_BASE_URL}"
+model = "${VLLM_API_MODEL}"
+# batch prompts for vllm_local_inference (optional)
+batch = []
+# for vllm_local
+model_path = "${TARGET_MODEL_PATH}"
+trust_remote_code = true
+tensor_parallel_size = 1
+gpu_memory_utilization = 0.9
+max_model_len = 16000
+
+# Local open-source model config
+[llm_factory.local_kwargs]
+model_path = "${TARGET_MODEL_PATH}"
+tokenizer_path = "${TARGET_TOKENIZER_PATH}"
+revision = ""
+trust_remote_code = true
+device = "cuda"
+dtype = "auto"
+
+# Local token counting
+[llm_factory.local_kwargs.token_count]
+enabled = true
+backend = "hf"
